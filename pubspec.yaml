@@ -1,0 +1,25 @@
+name: arcline
+description: "An animated arc gauge for Flutter: a spring-driven fill, an over-target lap, milestone markers and a counting centre label."
+version: 1.0.0
+homepage: https://yagnikbarasiya23.github.io/arcline/
+repository: https://github.com/YagnikBarasiya23/arcline
+issue_tracker: https://github.com/YagnikBarasiya23/arcline/issues
+topics: [animation, gauge, progress, widget, ui]
+screenshots:
+  - description: "Arcline filling a calorie gauge in the demo app"
+    path: screenshots/arcline.jpg
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
