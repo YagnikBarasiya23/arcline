@@ -1,6 +1,8 @@
 import 'package:arcline/arcline.dart';
 import 'package:flutter/material.dart';
 
+import 'controls.dart';
+
 void main() => runApp(const ArclineDemo());
 
 const _bg = Color(0xFF050505);
@@ -17,11 +19,12 @@ class ArclineDemo extends StatelessWidget {
     return MaterialApp(
       title: 'Arcline — animated arc gauge for Flutter',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: _bg,
-        colorScheme: const ColorScheme.dark(primary: _accent, surface: _panel),
-        sliderTheme: const SliderThemeData(activeTrackColor: _accent, thumbColor: _accent, inactiveTrackColor: _line),
+      theme: demoControlsTheme(
+        ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: _bg,
+          colorScheme: const ColorScheme.dark(primary: _accent, surface: _panel),
+        ),
       ),
       home: const DemoPage(),
     );
@@ -49,9 +52,10 @@ class _DemoPageState extends State<DemoPage> {
     final remaining = _target - _eaten;
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 28, 20, 40),
+            padding: EdgeInsets.fromLTRB(20, 28, 20, 40 + MediaQuery.paddingOf(context).bottom),
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 920),
               child: Column(
@@ -79,15 +83,28 @@ class _DemoPageState extends State<DemoPage> {
                               center: (context, value) => Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text('${value.round()}', style: const TextStyle(fontSize: 46, fontWeight: FontWeight.w800, letterSpacing: -1.5, fontFeatures: [FontFeature.tabularFigures()])),
+                                  Text(
+                                    '${value.round()}',
+                                    style: const TextStyle(
+                                      fontSize: 46,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: -1.5,
+                                      fontFeatures: [FontFeature.tabularFigures()],
+                                    ),
+                                  ),
                                   const Text('of 2,454 kcal', style: TextStyle(color: _muted)),
                                 ],
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              remaining >= 0 ? '${remaining.round()} kcal left today' : '${(-remaining).round()} kcal over target',
-                              style: TextStyle(color: remaining >= 0 ? _muted : const Color(0xFFFB923C), fontWeight: FontWeight.w600),
+                              remaining >= 0
+                                  ? '${remaining.round()} kcal left today'
+                                  : '${(-remaining).round()} kcal over target',
+                              style: TextStyle(
+                                color: remaining >= 0 ? _muted : const Color(0xFFFB923C),
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 18),
                             Wrap(
@@ -109,10 +126,40 @@ class _DemoPageState extends State<DemoPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Feel', style: TextStyle(color: _muted, fontWeight: FontWeight.w600)),
-                            _Setting(label: 'Sweep', value: '${_sweep.round()}°', slider: Slider(value: _sweep, min: 120, max: 360, onChanged: (v) => setState(() => _sweep = v))),
-                            _Setting(label: 'Thickness', value: '${_thickness.round()} px', slider: Slider(value: _thickness, min: 6, max: 40, onChanged: (v) => setState(() => _thickness = v))),
-                            _Setting(label: 'Damping', value: _damping.toStringAsFixed(0), slider: Slider(value: _damping, min: 4, max: 30, onChanged: (v) => setState(() => _damping = v))),
+                            const Text(
+                              'Feel',
+                              style: TextStyle(color: _muted, fontWeight: FontWeight.w600),
+                            ),
+                            _Setting(
+                              label: 'Sweep',
+                              value: '${_sweep.round()}°',
+                              slider: Slider(
+                                value: _sweep,
+                                min: 120,
+                                max: 360,
+                                onChanged: (v) => setState(() => _sweep = v),
+                              ),
+                            ),
+                            _Setting(
+                              label: 'Thickness',
+                              value: '${_thickness.round()} px',
+                              slider: Slider(
+                                value: _thickness,
+                                min: 6,
+                                max: 40,
+                                onChanged: (v) => setState(() => _thickness = v),
+                              ),
+                            ),
+                            _Setting(
+                              label: 'Damping',
+                              value: _damping.toStringAsFixed(0),
+                              slider: Slider(
+                                value: _damping,
+                                min: 4,
+                                max: 30,
+                                onChanged: (v) => setState(() => _damping = v),
+                              ),
+                            ),
                             const SizedBox(height: 8),
                             const Text(
                               'Tap the buttons quickly — the arc keeps its momentum instead of restarting. '
@@ -131,14 +178,41 @@ class _DemoPageState extends State<DemoPage> {
                       runSpacing: 20,
                       alignment: WrapAlignment.spaceAround,
                       children: [
-                        _Mini(label: 'Steps', value: 7420, max: 10000, unit: '', colors: [Color(0xFF93C5FD), Color(0xFFC4B5FD)]),
-                        _Mini(label: 'Water', value: 1.8, max: 2.5, unit: ' L', decimals: 1, colors: [Color(0xFF67E8F9), Color(0xFF7DD3FC)]),
-                        _Mini(label: 'Sleep', value: 8.4, max: 8, unit: ' h', decimals: 1, colors: [Color(0xFFF9A8D4), Color(0xFFFDA4AF)]),
+                        _Mini(
+                          label: 'Steps',
+                          value: 7420,
+                          max: 10000,
+                          unit: '',
+                          colors: [Color(0xFF93C5FD), Color(0xFFC4B5FD)],
+                        ),
+                        _Mini(
+                          label: 'Water',
+                          value: 1.8,
+                          max: 2.5,
+                          unit: ' L',
+                          decimals: 1,
+                          colors: [Color(0xFF67E8F9), Color(0xFF7DD3FC)],
+                        ),
+                        _Mini(
+                          label: 'Sleep',
+                          value: 8.4,
+                          max: 8,
+                          unit: ' h',
+                          decimals: 1,
+                          colors: [Color(0xFFF9A8D4), Color(0xFFFDA4AF)],
+                        ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
-                  const Text('MIT © 2026 Yagnik Barasiya · github.com/YagnikBarasiya23/arcline', style: TextStyle(color: _muted, fontSize: 13)),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      'MIT © 2026 Yagnik Barasiya · github.com/YagnikBarasiya23/arcline',
+                      style: TextStyle(color: _muted, fontSize: 13),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -157,9 +231,15 @@ class _Header extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('ARCLINE · FLUTTER', style: TextStyle(color: Color(0xFF71717A), letterSpacing: 3.5, fontSize: 12, fontWeight: FontWeight.w600)),
+        Text(
+          'ARCLINE · FLUTTER',
+          style: TextStyle(color: Color(0xFF71717A), letterSpacing: 3.5, fontSize: 12, fontWeight: FontWeight.w600),
+        ),
         SizedBox(height: 12),
-        Text('Progress that springs,\nnot ticks.', style: TextStyle(fontSize: 44, height: 1.02, fontWeight: FontWeight.w800, letterSpacing: -1.8)),
+        Text(
+          'Progress that springs,\nnot ticks.',
+          style: TextStyle(fontSize: 44, height: 1.02, fontWeight: FontWeight.w800, letterSpacing: -1.8),
+        ),
         SizedBox(height: 14),
         Text(
           'An arc gauge with a spring-driven fill, a second lap past the target, milestone ticks and a centre that counts along.',
@@ -181,7 +261,11 @@ class _Panel extends StatelessWidget {
     return Container(
       width: width,
       padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(color: _panel, borderRadius: BorderRadius.circular(22), border: Border.all(color: _line)),
+      decoration: BoxDecoration(
+        color: _panel,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: _line),
+      ),
       child: child,
     );
   }
@@ -195,16 +279,7 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onTap,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.white,
-        side: const BorderSide(color: Color(0x38FFFFFF)),
-        shape: const StadiumBorder(),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      ),
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
-    );
+    return PillButton(label: label, onPressed: onTap);
   }
 }
 
@@ -222,7 +297,13 @@ class _Setting extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(children: [Text(label, style: const TextStyle(color: _muted)), const Spacer(), Text(value)]),
+          Row(
+            children: [
+              Text(label, style: const TextStyle(color: _muted)),
+              const Spacer(),
+              Text(value),
+            ],
+          ),
           slider,
         ],
       ),
@@ -231,7 +312,14 @@ class _Setting extends StatelessWidget {
 }
 
 class _Mini extends StatelessWidget {
-  const _Mini({required this.label, required this.value, required this.max, required this.unit, required this.colors, this.decimals = 0});
+  const _Mini({
+    required this.label,
+    required this.value,
+    required this.max,
+    required this.unit,
+    required this.colors,
+    this.decimals = 0,
+  });
 
   final String label;
   final double value;
@@ -253,7 +341,10 @@ class _Mini extends StatelessWidget {
           sweepDegrees: 360,
           colors: colors,
           semanticLabel: label,
-          center: (context, v) => Text('${v.toStringAsFixed(decimals)}$unit', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700)),
+          center: (context, v) => Text(
+            '${v.toStringAsFixed(decimals)}$unit',
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
         ),
         const SizedBox(height: 6),
         Text(label, style: const TextStyle(color: _muted)),
